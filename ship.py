@@ -1,4 +1,4 @@
-import pygame
+from pygame import Vector2, draw, key, K_UP, K_LEFT, K_RIGHT
 from math import cos, sin, radians, degrees, sqrt, hypot
 
 # Color values
@@ -11,8 +11,8 @@ class Ship:
         self.width = windowWidth
         self.height = windowHeight
 
-        self.pos = pygame.math.Vector2(windowWidth/2, windowHeight/2)
-        self.vel = pygame.math.Vector2()
+        self.pos = Vector2(windowWidth/2, windowHeight/2)
+        self.vel = Vector2()
         self.acc = 0
         self.maxVel = 8
         self.thrust = 0.1
@@ -33,11 +33,11 @@ class Ship:
             # If within max distance for a collision, check all points for collision
             if centDist <= self.size + A.size/2:
                 # Calculate points of ship
-                p1 = pygame.math.Vector2(cos(radians(self.dir)) * self.size +
+                p1 = Vector2(cos(radians(self.dir)) * self.size +
                                          self.pos.x, sin(radians(self.dir)) * self.size + self.pos.y)
-                p2 = pygame.math.Vector2(cos(radians(self.dir + 120)) * self.size +
+                p2 = Vector2(cos(radians(self.dir + 120)) * self.size +
                                          self.pos.x, sin(radians(self.dir + 120)) * self.size + self.pos.y)
-                p3 = pygame.math.Vector2(cos(radians(self.dir + 240)) * self.size +
+                p3 = Vector2(cos(radians(self.dir + 240)) * self.size +
                                          self.pos.x, sin(radians(self.dir + 240)) * self.size + self.pos.y)
 
                 # Calculate distance from asteroid center for each point in ship
@@ -61,7 +61,7 @@ class Ship:
         self.pos += self.vel
 
         # Create acceleration vector and add it to velocity
-        accVec = pygame.math.Vector2(
+        accVec = Vector2(
             cos(radians(self.dir)), sin(radians(self.dir)))
         accVec.scale_to_length(self.acc)
 
@@ -89,15 +89,15 @@ class Ship:
 
     def move(self):
         # Get state of all keys
-        keys = pygame.key.get_pressed()
+        keys = key.get_pressed()
 
         # If up arrow pressed, set acceleration to thrust value
-        if keys[pygame.K_UP]:
+        if keys[K_UP]:
             self.acc = self.thrust
         # If right or left arrow pressed add or subtract respectivly to the direction delta
-        if keys[pygame.K_RIGHT]:
+        if keys[K_RIGHT]:
             self.dirDelta += self.turnSpeed
-        if keys[pygame.K_LEFT]:
+        if keys[K_LEFT]:
             self.dirDelta -= self.turnSpeed
 
         # Linearly interpolate (lerp) between current direction and the direction delta
@@ -106,16 +106,16 @@ class Ship:
 
     def draw(self, screen):
         # Create points of equilateral triangle around the center of the ship
-        p1 = pygame.math.Vector2(cos(radians(self.dir)) * self.size +
+        p1 = Vector2(cos(radians(self.dir)) * self.size +
                                  self.pos.x, sin(radians(self.dir)) * self.size + self.pos.y)
-        p2 = pygame.math.Vector2(cos(radians(self.dir + 120)) * self.size +
+        p2 = Vector2(cos(radians(self.dir + 120)) * self.size +
                                  self.pos.x, sin(radians(self.dir + 120)) * self.size + self.pos.y)
-        p3 = pygame.math.Vector2(cos(radians(self.dir + 240)) * self.size +
+        p3 = Vector2(cos(radians(self.dir + 240)) * self.size +
                                  self.pos.x, sin(radians(self.dir + 240)) * self.size + self.pos.y)
         points = [p1, p2, p3]
 
         # Draw ship with antialiased lines
-        pygame.draw.aalines(screen, WHITE, True, points, 2)
+        draw.aalines(screen, WHITE, True, points, 2)
 
         return
 

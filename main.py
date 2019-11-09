@@ -1,4 +1,3 @@
-import pygame
 from game import Game
 
 # create instance of asteroids game
