@@ -1,5 +1,7 @@
 from game import Game
 
+print("***Welcome to Genetic Asteroids!***")
+
 # create instance of asteroids game
 app = Game()
 

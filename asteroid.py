@@ -2,9 +2,7 @@ from pygame import Vector2, draw, Rect
 from math import cos, sin, radians, degrees
 from random import random, randint
 
-# Color values
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
+import config as cfg
 
 
 class Asteroid:
@@ -82,5 +80,5 @@ class Asteroid:
         # Draw ellipse at asteroids position
         rect = Rect(
             (self.pos.x - self.size/2, self.pos.y - self.size/2), (self.size, self.size))
-        draw.ellipse(screen, WHITE, rect, 1)
+        draw.ellipse(screen, cfg.white, rect, 1)
         return

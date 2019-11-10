@@ -1,11 +1,10 @@
 from pygame import Vector2, draw, key, K_UP, K_LEFT, K_RIGHT, K_SPACE
 from math import cos, sin, radians, degrees, sqrt, hypot
+import json
 
 from bullet import Bullet
 
-# Color values
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
+import config as cfg
 
 
 class Ship:
@@ -132,7 +131,7 @@ class Ship:
         points = [p1, p2, p3]
 
         # Draw ship with antialiased lines
-        draw.aalines(screen, WHITE, True, points, 2)
+        draw.aalines(screen, cfg.white, True, points, 2)
 
         for B in self.bullets:
             B.draw(screen)

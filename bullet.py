@@ -1,7 +1,7 @@
 from pygame import Vector2, draw, Rect
 from math import cos, sin, radians, degrees
 
-WHITE = (255, 255, 255)
+import config as cfg
 
 
 class Bullet:
@@ -18,17 +18,18 @@ class Bullet:
         self.tick = 0
 
     def update(self):
-        move = Vector2(cos(radians(self.dir)) * self.speed, sin(radians(self.dir)) * self.speed)
+        move = Vector2(cos(radians(self.dir)) * self.speed,
+                       sin(radians(self.dir)) * self.speed)
         self.pos += move
 
         if self.pos.x > self.width:
-            self.pos.x=0
+            self.pos.x = 0
         if self.pos.x < 0:
-            self.pos.x=self.width
+            self.pos.x = self.width
         if self.pos.y > self.height:
-            self.pos.y=0
+            self.pos.y = 0
         if self.pos.y < 0:
-            self.pos.y=self.height
+            self.pos.y = self.height
 
         self.tick += 1
 
@@ -36,8 +37,8 @@ class Bullet:
 
     def draw(self, screen):
         # Draw bullet at asteroids position
-        rect=Rect(
+        rect = Rect(
             (self.pos.x - self.size/2, self.pos.y - self.size/2), (self.size, self.size))
-        draw.ellipse(screen, WHITE, rect)
+        draw.ellipse(screen, cfg.white, rect)
 
         return

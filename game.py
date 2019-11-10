@@ -2,15 +2,14 @@ import pygame
 from ship import Ship
 from asteroid import Asteroid
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
+import config as cfg
 
 
 class Game:
     def __init__(self):
         # initialize game window
-        self.screen_width = 700
-        self.screen_height = 400
+        self.screen_width = 900
+        self.screen_height = 500
         self.screen = pygame.display.set_mode(
             [self.screen_width, self.screen_height])
 
@@ -45,7 +44,7 @@ class Game:
 
     def render(self):
         # Fill screen with black
-        self.screen.fill(BLACK)
+        self.screen.fill(cfg.black)
 
         # Draw ship
         self.ship.draw(self.screen)
