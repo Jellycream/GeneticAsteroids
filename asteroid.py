@@ -1,5 +1,5 @@
 from pygame import Vector2, draw
-from math import cos, sin, radians, degrees
+from math import cos, sin, radians, degrees, degrees, hypot, atan2
 from random import random, randint
 
 import config as cfg
@@ -23,17 +23,17 @@ class Asteroid:
             self.res *= choice
             if choice == 1:
                 self.size = 20
-            if choice == 2:
+            elif choice == 2:
                 self.size = 40
-            if choice == 3:
+            elif choice == 3:
                 self.size = 80
         else:
             self.res *= size
             if size == 1:
                 self.size = 20
-            if size == 2:
+            elif size == 2:
                 self.size = 40
-            if size == 3:
+            elif size == 3:
                 self.size = 80
             else:
                 print("invalid size defaulting to 1!")
@@ -64,6 +64,27 @@ class Asteroid:
         self.spin = 0
 
         return
+
+    def checkCollisions(self, bullets):
+        for B in bullets:
+            dist = hypot(self.pos.x - B.pos.x, self.pos.y - B.pos.y)
+            if dist <= self.size/2:
+                return B
+
+        return False
+
+    def split(self, bullet):
+        splitdir = degrees(
+            atan2(bullet.pos.y - self.pos.y, bullet.pos.x - self.pos.x))
+        print(splitdir)
+        if self.size == 80:
+            return [Asteroid(self.width, self.height, self.pos.x, self.pos.y, 2, splitdir - 45),
+                    Asteroid(self.width, self.height, self.pos.x, self.pos.y, 2, splitdir + 45)]
+        elif self.size == 40:
+            return [Asteroid(self.width, self.height, self.pos.x, self.pos.y, 1, splitdir - 45),
+                    Asteroid(self.width, self.height, self.pos.x, self.pos.y, 1, splitdir + 45)]
+        else:
+            return False
 
     def update(self):
         # change position by direction vector multiplied by speed

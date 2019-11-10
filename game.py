@@ -38,6 +38,25 @@ class Game:
         for A in self.asteroids:
             A.update()
 
+            # Check for bullet asteroid collisions
+            coll = A.checkCollisions(self.ship.bullets)
+            if coll:
+                # Remove colliding bullet
+                self.ship.bullets.remove(coll)
+
+                # If small asteroid just remove, else split
+                if A.size == 20:
+                    self.asteroids.remove(A)
+                    continue
+                else:
+                    # Add children asteroids to list
+                    for child in A.split(coll):
+                        self.asteroids.append(child)
+
+                    # Remove parent asteroid
+                    self.asteroids.remove(A)
+                    continue
+
         self.clock.tick(60)
         # Process events
         pygame.event.pump()
