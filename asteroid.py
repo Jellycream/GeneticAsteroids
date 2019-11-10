@@ -6,7 +6,7 @@ import config as cfg
 
 
 class Asteroid:
-    def __init__(self, windowWidth, windowHeight, x=False, y=False, size=False, direction=False):
+    def __init__(self, windowWidth, windowHeight, size=False, x=False, y=False, direction=False):
         self.width = windowWidth
         self.height = windowHeight
         self.pos = Vector2()
@@ -78,11 +78,11 @@ class Asteroid:
             atan2(bullet.pos.y - self.pos.y, bullet.pos.x - self.pos.x))
         print(splitdir)
         if self.size == 80:
-            return [Asteroid(self.width, self.height, self.pos.x, self.pos.y, 2, splitdir - 45),
-                    Asteroid(self.width, self.height, self.pos.x, self.pos.y, 2, splitdir + 45)]
+            return [Asteroid(self.width, self.height, 2, self.pos.x, self.pos.y, splitdir - 45),
+                    Asteroid(self.width, self.height, 2, self.pos.x, self.pos.y, splitdir + 45)]
         elif self.size == 40:
-            return [Asteroid(self.width, self.height, self.pos.x, self.pos.y, 1, splitdir - 45),
-                    Asteroid(self.width, self.height, self.pos.x, self.pos.y, 1, splitdir + 45)]
+            return [Asteroid(self.width, self.height, 1, self.pos.x, self.pos.y, splitdir - 45),
+                    Asteroid(self.width, self.height, 1, self.pos.x, self.pos.y, splitdir + 45)]
         else:
             return False
 

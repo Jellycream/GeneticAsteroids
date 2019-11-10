@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 from ship import Ship
 from asteroid import Asteroid
 
@@ -16,9 +17,12 @@ class Game:
         # Create ship
         self.ship = Ship(self.screen_width, self.screen_height)
 
+        # Keep track of time between asteroid spawning
+        self.lastSpawn = 0
+
         # Create asteroid list
-        self.asteroids = [Asteroid(self.screen_width, self.screen_height), Asteroid(
-            self.screen_width, self.screen_height)]
+        self.asteroids = [
+            Asteroid(self.screen_width, self.screen_height)]
 
         # Setup game clock
         self.clock = pygame.time.Clock()
@@ -57,6 +61,12 @@ class Game:
                     self.asteroids.remove(A)
                     continue
 
+        # If enough time has passed spawn a new asteroid
+        if pygame.time.get_ticks() - self.lastSpawn >= 5000 and self.asteroidCount() <= 8:
+            self.asteroids.append(
+                Asteroid(self.screen_width, self.screen_height))
+            self.lastSpawn = pygame.time.get_ticks()
+
         self.clock.tick(60)
         # Process events
         pygame.event.pump()
@@ -83,12 +93,23 @@ class Game:
                     return True
         return False
 
+    def asteroidCount(self):
+        count = 0
+        for A in self.asteroids:
+            if A.size == 20:
+                count += 1
+            elif A.size == 40:
+                count += 3
+            elif A.size == 80:
+                count += 5
+
+        return count
+
     def restart(self):
         # Replace data
         # Create ship
         self.ship = Ship(self.screen_width, self.screen_height)
-        self.asteroids = [Asteroid(self.screen_width, self.screen_height), Asteroid(
-            self.screen_width, self.screen_height)]
+        self.asteroids = [Asteroid(self.screen_width, self.screen_height)]
 
         # Setup game clock
         self.clock = pygame.time.Clock()
