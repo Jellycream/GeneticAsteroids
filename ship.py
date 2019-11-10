@@ -1,5 +1,7 @@
-from pygame import Vector2, draw, key, K_UP, K_LEFT, K_RIGHT
+from pygame import Vector2, draw, key, K_UP, K_LEFT, K_RIGHT, K_SPACE
 from math import cos, sin, radians, degrees, sqrt, hypot
+
+from bullet import Bullet
 
 # Color values
 BLACK = (0, 0, 0)
@@ -14,7 +16,7 @@ class Ship:
         self.pos = Vector2(windowWidth/2, windowHeight/2)
         self.vel = Vector2()
         self.acc = 0
-        self.maxVel = 8
+        self.maxVel = 4
         self.thrust = 0.1
 
         self.dir = -90
@@ -25,6 +27,9 @@ class Ship:
 
         self.size = 14
 
+        self.bullets = []
+        self.shootDelta = 0
+
     def checkCollisions(self, asteroids, screen):
         for A in asteroids:
             # Get distance from ships center and asteroids center
@@ -34,11 +39,11 @@ class Ship:
             if centDist <= self.size + A.size/2:
                 # Calculate points of ship
                 p1 = Vector2(cos(radians(self.dir)) * self.size +
-                                         self.pos.x, sin(radians(self.dir)) * self.size + self.pos.y)
+                             self.pos.x, sin(radians(self.dir)) * self.size + self.pos.y)
                 p2 = Vector2(cos(radians(self.dir + 120)) * self.size +
-                                         self.pos.x, sin(radians(self.dir + 120)) * self.size + self.pos.y)
+                             self.pos.x, sin(radians(self.dir + 120)) * self.size + self.pos.y)
                 p3 = Vector2(cos(radians(self.dir + 240)) * self.size +
-                                         self.pos.x, sin(radians(self.dir + 240)) * self.size + self.pos.y)
+                             self.pos.x, sin(radians(self.dir + 240)) * self.size + self.pos.y)
 
                 # Calculate distance from asteroid center for each point in ship
                 d1 = hypot(p1.x - A.pos.x, p1.y - A.pos.y)
@@ -56,7 +61,7 @@ class Ship:
 
         return False
 
-    def update(self, clock):
+    def update(self):
         # Add velocity to position
         self.pos += self.vel
 
@@ -85,9 +90,14 @@ class Ship:
         if self.pos.y < 0:
             self.pos.y = self.height
 
+        for B in self.bullets:
+            B.update()
+            if B.tick >= 100:
+                self.bullets.remove(B)
+
         return
 
-    def move(self):
+    def move(self, time):
         # Get state of all keys
         keys = key.get_pressed()
 
@@ -100,6 +110,13 @@ class Ship:
         if keys[K_LEFT]:
             self.dirDelta -= self.turnSpeed
 
+        # Add bullet to list if space key pressed and previous bullet was added more than 400 milliseconds before
+        # Maximum number of bullets on screen at a time is 5
+        if keys[K_SPACE] and time - self.shootDelta >= 400:
+            self.shootDelta = time
+            self.bullets.append(Bullet(self.width, self.height,
+                                       cos(radians(self.dir)) * self.size + self.pos.x, sin(radians(self.dir)) * self.size + self.pos.y, self.dir))
+
         # Linearly interpolate (lerp) between current direction and the direction delta
         self.dir = self.lerp(self.dir, self.dirDelta, 0.1)
         return
@@ -107,15 +124,18 @@ class Ship:
     def draw(self, screen):
         # Create points of equilateral triangle around the center of the ship
         p1 = Vector2(cos(radians(self.dir)) * self.size +
-                                 self.pos.x, sin(radians(self.dir)) * self.size + self.pos.y)
+                     self.pos.x, sin(radians(self.dir)) * self.size + self.pos.y)
         p2 = Vector2(cos(radians(self.dir + 120)) * self.size +
-                                 self.pos.x, sin(radians(self.dir + 120)) * self.size + self.pos.y)
+                     self.pos.x, sin(radians(self.dir + 120)) * self.size + self.pos.y)
         p3 = Vector2(cos(radians(self.dir + 240)) * self.size +
-                                 self.pos.x, sin(radians(self.dir + 240)) * self.size + self.pos.y)
+                     self.pos.x, sin(radians(self.dir + 240)) * self.size + self.pos.y)
         points = [p1, p2, p3]
 
         # Draw ship with antialiased lines
         draw.aalines(screen, WHITE, True, points, 2)
+
+        for B in self.bullets:
+            B.draw(screen)
 
         return
 

@@ -28,8 +28,8 @@ class Game:
         # Update full diplay surface
         pygame.display.flip()
         # Update and move ship
-        self.ship.update(self.clock.tick(60))
-        self.ship.move()
+        self.ship.update()
+        self.ship.move(pygame.time.get_ticks())
 
         # Check for ship asteroid collisions
         if self.ship.checkCollisions(self.asteroids, self.screen):
@@ -39,6 +39,7 @@ class Game:
         for A in self.asteroids:
             A.update()
 
+        self.clock.tick(60)
         # Process events
         pygame.event.pump()
 
