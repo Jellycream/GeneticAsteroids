@@ -1,4 +1,4 @@
-from pygame import Vector2, draw, Rect
+from pygame import Vector2, draw
 from math import cos, sin, radians, degrees
 from random import random, randint
 
@@ -14,9 +14,13 @@ class Asteroid:
         # Sizes: 80, 40, 20
         self.size = 0
 
+        # number of points in asteroid
+        self.res = 5
+
         # If size not given with init, choose random size
         if not size:
             choice = randint(1, 3)
+            self.res *= choice
             if choice == 1:
                 self.size = 20
             if choice == 2:
@@ -24,6 +28,7 @@ class Asteroid:
             if choice == 3:
                 self.size = 80
         else:
+            self.res *= size
             if size == 1:
                 self.size = 20
             if size == 2:
@@ -56,6 +61,8 @@ class Asteroid:
         else:
             self.pos = Vector2(x, y)
 
+        self.spin = 0
+
         return
 
     def update(self):
@@ -77,8 +84,15 @@ class Asteroid:
         return
 
     def draw(self, screen):
-        # Draw ellipse at asteroids position
-        rect = Rect(
-            (self.pos.x - self.size/2, self.pos.y - self.size/2), (self.size, self.size))
-        draw.ellipse(screen, cfg.white, rect, 1)
+        step = 360/self.res
+        points = []
+        i = 0
+        while i < self.res:
+            points.append(Vector2(self.pos.x + cos(radians(i*step + self.spin)) *
+                                  self.size/2, self.pos.y + sin(radians(i*step + self.spin)) * self.size/2))
+            i += 1
+
+        draw.aalines(screen, cfg.white, True, points)
+
+        self.spin += 1
         return

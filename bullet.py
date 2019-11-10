@@ -13,7 +13,7 @@ class Bullet:
         self.dir = direction
 
         self.speed = 6
-        self.size = 6
+        self.size = 4
 
         self.tick = 0
 
