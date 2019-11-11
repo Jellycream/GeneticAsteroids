@@ -40,7 +40,7 @@ class Asteroid:
                 self.size = 20
 
         # Set speed as reciprocal of size
-        self.speed = 80/self.size
+        self.speed = 80/(self.size * 1.5)
 
         # If direction not given, set to random degree
         self.dir = direction or (random() * 360)

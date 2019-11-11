@@ -9,8 +9,8 @@ import config as cfg
 class Game:
     def __init__(self):
         # initialize game window
-        self.screen_width = 900
-        self.screen_height = 500
+        self.screen_width = 720
+        self.screen_height = 400
         self.screen = pygame.display.set_mode(
             [self.screen_width, self.screen_height])
 
@@ -62,7 +62,7 @@ class Game:
                     continue
 
         # If enough time has passed spawn a new asteroid
-        if pygame.time.get_ticks() - self.lastSpawn >= 5000 and self.asteroidCount() <= 8:
+        if pygame.time.get_ticks() - self.lastSpawn >= 6000 and self.asteroidCount() <= 8:
             self.asteroids.append(
                 Asteroid(self.screen_width, self.screen_height))
             self.lastSpawn = pygame.time.get_ticks()
@@ -101,7 +101,7 @@ class Game:
             elif A.size == 40:
                 count += 3
             elif A.size == 80:
-                count += 5
+                count += 4
 
         return count
 
