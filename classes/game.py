@@ -7,25 +7,23 @@ import config as cfg
 
 
 class Game:
-    def __init__(self):
-        # Initialize Pygame
-        pygame.init()
+    def __init__(self, screen, id):
+        self.id = id
 
-        # initialize game window
-        self.screen_width = 720
-        self.screen_height = 400
-        self.screen = pygame.display.set_mode(
-            [self.screen_width, self.screen_height])
+        self.width = 720
+        self.height = 400
+
+        self.screen = screen
 
         # Create ship
-        self.ship = Ship(self.screen_width, self.screen_height)
+        self.ship = Ship(self.width, self.height)
 
         # Keep track of time between asteroid spawning
         self.lastSpawn = 0
 
         # Create asteroid list
         self.asteroids = [
-            Asteroid(self.screen_width, self.screen_height)]
+            Asteroid(self.width, self.height)]
 
         # Setup game clock
         self.clock = pygame.time.Clock()
@@ -35,6 +33,7 @@ class Game:
     def update(self):
         # Update full diplay surface
         pygame.display.flip()
+
         # Update and move ship
         self.ship.update()
         self.ship.move(pygame.time.get_ticks())
@@ -72,7 +71,7 @@ class Game:
         # If enough time has passed spawn a new asteroid
         if pygame.time.get_ticks() - self.lastSpawn >= 6000 and self.asteroidCount() <= 8:
             self.asteroids.append(
-                Asteroid(self.screen_width, self.screen_height))
+                Asteroid(self.width, self.height))
             self.lastSpawn = pygame.time.get_ticks()
 
         self.clock.tick(60)
@@ -81,15 +80,20 @@ class Game:
 
     def render(self):
         font = pygame.font.Font('assets/Ubuntu-Regular.ttf', 32)
-        text = font.render(str(self.score), True, cfg.white)
-        textRect = text.get_rect()
-        textRect.center = (self.screen_width - 32, 32)
+        scoreText = font.render(str(self.score), True, cfg.white)
+        scoreTextRect = scoreText.get_rect()
+        scoreTextRect.center = (self.width - 32, 32)
+
+        idText = font.render("#" + str(self.id), True, cfg.white)
+        idTextRect = idText.get_rect()
+        idTextRect.center = (32, 32)
 
         # Fill screen with black
         self.screen.fill(cfg.black)
 
-        # Draw score
-        self.screen.blit(text, textRect) 
+        # Draw score and id
+        self.screen.blit(scoreText, scoreTextRect)
+        self.screen.blit(idText, idTextRect)
 
         # Draw ship
         self.ship.draw(self.screen)
@@ -97,17 +101,6 @@ class Game:
         # Draw all asteroids
         for A in self.asteroids:
             A.draw(self.screen)
-
-    def process_events(self):
-        # Check events for quit command or esc key
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return True
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    return True
-        return False
 
     def asteroidCount(self):
         count = 0
@@ -124,14 +117,14 @@ class Game:
     def restart(self):
         # Replace data
         # Create ship
-        self.ship = Ship(self.screen_width, self.screen_height)
+        self.ship = Ship(self.width, self.height)
 
         # Keep track of time between asteroid spawning
         self.lastSpawn = 0
 
         # Create asteroid list
         self.asteroids = [
-            Asteroid(self.screen_width, self.screen_height)]
+            Asteroid(self.width, self.height)]
 
         # Setup game clock
         self.clock = pygame.time.Clock()
