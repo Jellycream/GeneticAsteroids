@@ -76,7 +76,6 @@ class Asteroid:
     def split(self, bullet):
         splitdir = degrees(
             atan2(bullet.pos.y - self.pos.y, bullet.pos.x - self.pos.x))
-        print(splitdir)
         if self.size == 80:
             return [Asteroid(self.width, self.height, 2, self.pos.x, self.pos.y, splitdir - 45),
                     Asteroid(self.width, self.height, 2, self.pos.x, self.pos.y, splitdir + 45)]

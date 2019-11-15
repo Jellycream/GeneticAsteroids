@@ -8,6 +8,9 @@ import config as cfg
 
 class Game:
     def __init__(self):
+        # Initialize Pygame
+        pygame.init()
+
         # initialize game window
         self.screen_width = 720
         self.screen_height = 400
@@ -27,6 +30,8 @@ class Game:
         # Setup game clock
         self.clock = pygame.time.Clock()
 
+        self.score = 0
+
     def update(self):
         # Update full diplay surface
         pygame.display.flip()
@@ -45,6 +50,9 @@ class Game:
             # Check for bullet asteroid collisions
             coll = A.checkCollisions(self.ship.bullets)
             if coll:
+                # Add to score
+                self.score += 1
+
                 # Remove colliding bullet
                 self.ship.bullets.remove(coll)
 
@@ -72,8 +80,16 @@ class Game:
         pygame.event.pump()
 
     def render(self):
+        font = pygame.font.Font('assets/Ubuntu-Regular.ttf', 32)
+        text = font.render(str(self.score), True, cfg.white)
+        textRect = text.get_rect()
+        textRect.center = (self.screen_width - 32, 32)
+
         # Fill screen with black
         self.screen.fill(cfg.black)
+
+        # Draw score
+        self.screen.blit(text, textRect) 
 
         # Draw ship
         self.ship.draw(self.screen)
@@ -109,10 +125,18 @@ class Game:
         # Replace data
         # Create ship
         self.ship = Ship(self.screen_width, self.screen_height)
-        self.asteroids = [Asteroid(self.screen_width, self.screen_height)]
+
+        # Keep track of time between asteroid spawning
+        self.lastSpawn = 0
+
+        # Create asteroid list
+        self.asteroids = [
+            Asteroid(self.screen_width, self.screen_height)]
 
         # Setup game clock
         self.clock = pygame.time.Clock()
+
+        self.score = 0
         return
 
     def quit(self):
