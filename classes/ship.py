@@ -2,13 +2,14 @@ from pygame import Vector2, draw, key, K_UP, K_LEFT, K_RIGHT, K_SPACE
 from math import cos, sin, radians, degrees, sqrt, hypot
 import json
 
+from neuralNetwork import NeuralNetwork
 from bullet import Bullet
 
 import config as cfg
 
 
 class Ship:
-    def __init__(self, windowWidth, windowHeight):
+    def __init__(self, windowWidth, windowHeight, brain=False):
         self.width = windowWidth
         self.height = windowHeight
 
@@ -28,6 +29,8 @@ class Ship:
 
         self.bullets = []
         self.shootDelta = 0
+
+        self.brain = brain or NeuralNetwork(45, 60, 4)
 
     def checkCollisions(self, asteroids, screen):
         for A in asteroids:

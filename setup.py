@@ -8,5 +8,5 @@ setup(
     author='Max Caplan',
     url='https://github.com/Jellycream/GeneticAsteroids',
     license="MIT",
-    install_requires=['pygame']
+    install_requires=['pygame', 'tensorflow']
 )
